@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pemesanan Cuci Sepatu</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        body {
+            background: url('https://files.oaiusercontent.com/file-Rc3XxMMcuZPxkabjFrfH9Z?se=2025-03-22T22%3A52%3A57Z&sp=r&sv=2024-08-04&sr=b&rscc=max-age%3D604800%2C%20immutable%2C%20private&rscd=attachment%3B%20filename%3D01cd77d6-63b2-486f-a560-acd9ee590bb6.webp&sig=kK1vTsLJrc4t2m4GQVxeF1dev09GQxJgvq12GYW/q8k%3D') no-repeat center center fixed;
+            background-size: cover;
+        }
+    </style>
+</head>
+<body class="bg-gray-200">
+
+    <!-- Container -->
+    <div class="max-w-3xl mx-auto p-6">
+        <h1 class="text-3xl font-bold text-center text-black-600 mb-6">🧼 Order Cuci Sepatu 👟</h1>
+
+        <!-- Logo -->
+        <div class="flex justify-center mb-6">
+            <img src="images/asd.png" alt="Logo Toko" class="w-32 h-32 object-cover rounded-full border-4 border-gray-300 shadow-lg">
+        </div>
+
+        <!-- Form -->
+        <form id="orderForm" class="bg-white p-6 shadow-lg rounded-lg">
+            <div class="mb-4">
+                <label for="name" class="block text-lg font-semibold">👤 Nama</label>
+                <input type="text" id="name" name="name" class="w-full p-3 mt-2 border border-gray-300 rounded" placeholder="Masukkan nama Anda" required>
+            </div>
+
+            <div class="mb-4">
+                <label for="phone" class="block text-lg font-semibold">📞 Nomor HP</label>
+                <input type="tel" id="phone" name="phone" class="w-full p-3 mt-2 border border-gray-300 rounded" placeholder="Masukkan nomor HP aktif" required>
+            </div>
+
+            <div class="mb-4">
+                <label class="block text-lg font-semibold">👟 Cuci Premium</label>
+                <div class="flex justify-between">
+                    <div class="flex items-center">
+                        <input type="number" id="biasaQty" name="biasaQty" min="0" value="0" class="w-20 p-2 border border-gray-300 rounded">
+                        <label for="biasaQty" class="ml-2">Sepatu Biasa (Rp 40.000)</label>
+                    </div>
+                    <div class="flex items-center">
+                        <input type="number" id="putihQty" name="putihQty" min="0" value="0" class="w-20 p-2 border border-gray-300 rounded">
+                        <label for="putihQty" class="ml-2">Sepatu Putih (Rp 50.000)</label>
+                    </div>
+                </div>
+            </div>
+
+            <div class="mb-4">
+                <label for="notes" class="block text-lg font-semibold">📝 Catatan</label>
+                <textarea id="notes" name="notes" class="w-full p-3 mt-2 border border-gray-300 rounded" placeholder="Tambahkan catatan (opsional)"></textarea>
+            </div>
+
+            <div class="mb-4">
+                <label for="pickupMethod" class="block text-lg font-semibold">🚚 Metode Pengambilan</label>
+                <select id="pickupMethod" name="pickupMethod" class="w-full p-3 mt-2 border border-gray-300 rounded">
+                    <option value="Self Pickup">Self Pickup</option>
+                    <option value="Delivery">Delivery</option>
+                </select>
+            </div>
+
+            <!-- Input Lokasi hanya muncul saat memilih Delivery -->
+            <div id="locationField" class="mb-4 hidden">
+                <label for="location" class="block text-lg font-semibold">📍 Lokasi / Link Maps</label>
+                <input type="text" id="location" name="location" class="w-full p-3 mt-2 border border-gray-300 rounded" placeholder="Masukkan link lokasi">
+            </div>
+
+            <div class="mb-4">
+                <span id="totalPrice" class="block text-lg font-semibold text-blue-600">💰 Total Harga: Rp 0</span>
+            </div>
+
+            <button type="submit" class="w-full py-3 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition">
+                ✅ Pesan Sekarang
+            </button>
+        </form>
+    </div>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            // Ambil elemen
+            const pickupMethod = document.getElementById('pickupMethod');
+            const locationField = document.getElementById('locationField');
+
+            // Event listener untuk menampilkan atau menyembunyikan input lokasi
+            pickupMethod.addEventListener('change', function () {
+                if (pickupMethod.value === 'Delivery') {
+                    locationField.classList.remove('hidden'); // Tampilkan input lokasi
+                } else {
+                    locationField.classList.add('hidden'); // Sembunyikan jika pilih Self Pickup
+                }
+            });
+
+            // Fungsi untuk menghitung total harga berdasarkan jumlah sepatu
+            function calculateTotal() {
+                const biasaQty = parseInt(document.getElementById('biasaQty').value) || 0;
+                const putihQty = parseInt(document.getElementById('putihQty').value) || 0;
+
+                const hargaBiasa = 40000;
+                const hargaPutih = 50000;
+
+                const totalBiasa = biasaQty * hargaBiasa;
+                const totalPutih = putihQty * hargaPutih;
+
+                const total = totalBiasa + totalPutih;
+
+                document.getElementById('totalPrice').textContent = `💰 Total Harga: Rp ${total.toLocaleString()}`;
+            }
+
+            document.getElementById('biasaQty').addEventListener('input', calculateTotal);
+            document.getElementById('putihQty').addEventListener('input', calculateTotal);
+
+            // Form Submission
+            document.getElementById('orderForm').addEventListener('submit', function(event) {
+                event.preventDefault();
+
+                const name = document.getElementById('name').value;
+                const phone = document.getElementById('phone').value;
+                const biasaQty = document.getElementById('biasaQty').value;
+                const putihQty = document.getElementById('putihQty').value;
+                const notes = document.getElementById('notes').value;
+                const pickupMethodValue = pickupMethod.value;
+                const location = document.getElementById('location').value;
+                const total = document.getElementById('totalPrice').textContent.replace('💰 Total Harga: Rp ', '').replace('.', '');
+
+                let whatsappMessage = `🚀 *Order Cuci Sepatu*\n\n👤 *Nama:* ${name}\n📞 *No. HP:* ${phone}\n👟 *Sepatu Biasa:* ${biasaQty} x Rp 40.000\n👟 *Sepatu Putih:* ${putihQty} x Rp 50.000\n💰 *Total Harga:* Rp ${total}\n📝 *Catatan:* ${notes}\n🚚 *Metode Pengambilan:* ${pickupMethodValue}`;
+
+                if (pickupMethodValue === 'Delivery') {
+                    whatsappMessage += `\n📍 *Lokasi:* ${location || 'Tidak ada lokasi'}`;
+                }
+
+                window.location.href = `https://wa.me/6285921096409?text=${encodeURIComponent(whatsappMessage)}`;
+            });
+        });
+    </script>
+
+</body>
+</html>
